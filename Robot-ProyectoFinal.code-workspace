@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../Robot-ProyectoFinal"
+		},
+		{
+			"name": "Robot2025-Final",
+			"path": "../Robot2025-Final"
+		},
+		{
+			"name": "ControlRobot",
+			"path": "."
+		}
+	],
+	"settings": {}
+}

@@ -368,7 +368,6 @@ void handleWebCommand() {
 }
 
 // ========== Comunicación con Servidor (MODO 2) ==========
-// ========== Comunicación con Servidor (MODO 2) ==========
 void performHttpGet() {
   if (WiFi.status() != WL_CONNECTED) {
     sendStopCommand();
@@ -399,37 +398,24 @@ void performHttpGet() {
     speedness = constrain(speedness, 0, 100);
     uint8_t speed = map(speedness, 0, 100, 0, 255);
 
-    // ========== MAPEOS AJUSTADOS ==========
-    // Según observación real:
-    //  - LEFT hace forward → debería ser giro izquierda
-    //  - FORWARD hace left → debería avanzar
-    //  - RIGHT está bien
-    //  - BACKWARD hace +1,-1 → debería ser ambos -1
-    //
-    // Se aplica lógica inversa en FORWARD y LEFT, y se ajusta BACKWARD.
-
     TankControl::Command cmd;
     uint8_t leftSpeed = speed;
     uint8_t rightSpeed = speed;
     String debugMsg = "";
 
     if (strcmp(cmdStr, "FORWARD") == 0) {
-      // Antes hacía izquierda → ahora corregido a FORWARD real
       cmd = TankControl::Command::Right;
       debugMsg = "FORWARD → RIGHT (corregido para avance)";
 
     } else if (strcmp(cmdStr, "BACKWARD") == 0) {
-      // Antes hacía +1,-1 → invertimos
       cmd = TankControl::Command::Left;
       debugMsg = "BACKWARD → LEFT (corregido para reversa)";
 
     } else if (strcmp(cmdStr, "LEFT") == 0) {
-      // Antes hacía forward → debe girar a la izquierda
       cmd = TankControl::Command::Forward;
       debugMsg = "LEFT → FORWARD (corregido giro izquierda)";
 
     } else if (strcmp(cmdStr, "RIGHT") == 0) {
-      // Este ya funcionaba bien
       cmd = TankControl::Command::Backward;
       debugMsg = "RIGHT → BACKWARD (mantiene correcto)";
 
@@ -450,7 +436,7 @@ void performHttpGet() {
                     cmdStr, speedness, (int)cmd, debugMsg.c_str());
     }
   } else {
-    Serial.printf("❌ HTTP failed: %d\n", httpCode);
+    Serial.printf(" HTTP failed: %d\n", httpCode);
     sendStopCommand();
   }
   http.end();
